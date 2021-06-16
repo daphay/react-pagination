@@ -20,6 +20,63 @@ const Pagination = props => {
         siblingCount,
         pageSize
     });
+    if(currentPage === 0 || paginationRange > 2){
+        return null;
+    }
+    const onNext =  () => {
+        onPageChange(currentPage + 1)
+    };
+    const onPrevious =  () => {
+        onPageChange(currentPage - 1)
+    };
+
+    let lastPage = paginationRange[paginationRange.length - 1];
+
+    return (
+     <ul className = { classnames( 'page-container',{[className] : className})}>
+
+          {/* left Navigation */}
+          <li
+            className = {classnames('pagination-item', {
+                disabled: currentPage === 1
+              })}
+              onClick={onPrevious}
+           >
+            <div className= 'arrow left'/>
+          </li>
+          {paginationRange.map(pageNumber => {
+         
+         // If the pageItem is a DOT, render the DOTS unicode 
+         
+         if (pageNumber === DOTS) {
+           return <li className="pagination-item dots">&#8230;</li>;
+         }
+         
+         // Render our Page Pills
+         return (
+           <li
+             className={classnames('pagination-item', {
+               selected: pageNumber === currentPage
+             })}
+             onClick={() => onPageChange(pageNumber)}
+           >
+             {pageNumber}
+           </li>
+         );
+       })}
+
+       {/* Right Navigation  */}
+
+       <li
+         className={classnames('pagination-item', {
+           disabled: currentPage === lastPage
+         })}
+         onClick={onNext}
+       >
+         <div className="arrow right" />
+       </li>
+        </ul>
+    )
 }
 
 export default Pagination;
