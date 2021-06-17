@@ -1,7 +1,19 @@
-import React from 'react';
-import data from './data/mock-data.json';
+import React, {useState, useMemo} from 'react';
+import data from './data/sample_data.json';
+import Pagination from  './Pagination';
+import './style.scss';
+
+let PageSize = 10;
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    return data.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage]);
+
   return (
     <>
       <table>
@@ -15,7 +27,7 @@ export default function App() {
           </tr>
         </thead>
         <tbody>
-          {data.map(item => {
+          {currentTableData.map(item => {
             return (
               <tr>
                 <td>{item.id}</td>
@@ -28,6 +40,13 @@ export default function App() {
           })}
         </tbody>
       </table>
+      <Pagination
+        className="pagination-bar"
+        currentPage={currentPage}
+        totalCount={data.length}
+        pageSize={PageSize}
+        onPageChange={page => setCurrentPage(page)}
+      />
     </>
   );
 }
